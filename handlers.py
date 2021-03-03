@@ -31,3 +31,5 @@ class Exporter(FileHandler):
 
         with open(lua_path, mode='w') as new_file:
             new_file.write(code)
+
+        return ("ok", lua_path)
