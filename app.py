@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import filedialog
+from handlers import Exporter
 
 
 class App(tk.Tk):
@@ -58,9 +60,39 @@ class Export(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        btn_main_page = tk.Button(
+        self.btn_browse_file = tk.Button(
+            master=self, text='Browse File', command=self.browse_filepath)
+        self.lbl_filename = tk.Label(master=self, text='No file selected')
+
+        self.lbl_filename.grid(row=0, column=0)
+        self.btn_browse_file.grid(row=0, column=1)
+
+        self.btn_main_page = tk.Button(
             master=self, text='Back to Main Menu', command=lambda: controller.show_frame('StartPage'))
-        btn_main_page.pack()
+        self.btn_main_page.grid(row=1, column=1)
+
+        self.btn_export = tk.Button(
+            master=self, text='Export the cart to Lua', command=self.export_cartridge)
+        self.btn_export.grid(row=1, column=0)
+
+    def browse_filepath(self):
+        filename = filedialog.askopenfilename(
+            initialdir='~/.lexaloffle/pico-8/carts', title='select cart', filetypes=(("PICO-8 files (.p8)", "*.p8"),))
+        self.lbl_filename.configure(text=filename)
+
+    def export_cartridge(self):
+        if ' ' in self.lbl_filename['text']:
+            return
+        exp = Exporter(self.lbl_filename['text'])
+        ans, lua_path = exp.export_to_lua()
+
+        if ans == 'ok':
+            status = 'Exported sucessfully!\n lua file path: {}'.format(
+                lua_path)
+        else:
+            status = 'Unable to export the lua code.'
+
+        self.lbl_filename.configure(text=status)
 
 
 if __name__ == '__main__':
