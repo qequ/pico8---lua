@@ -76,7 +76,6 @@ class Importer(FileHandler):
 
         formatted_data = re.split(split_pattern, cart_data)
         formatted_data[1] = lua_code
-
         sep_in_cart = split_pattern.split('|')
         index_to_insert = 1
         while len(sep_in_cart) != 0:
@@ -88,7 +87,7 @@ class Importer(FileHandler):
 
         ready_to_write_data = ''.join(formatted_data)
 
-        with open(self.filepath + '7', mode='w') as f:
+        with open(self.filepath, mode='w') as f:
             f.write(ready_to_write_data)
 
         return 'ok'
